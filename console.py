@@ -121,11 +121,13 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif args_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[args_list[0]]()
         storage.save()
+        HBNBCommand.do_update(
+            self, f"{args_list[0]} {new_instance.id} {args_list[1]} {args_list[2]}")
         print(new_instance.id)
         storage.save()
 
