@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Console Module """
+from ast import arg
 import cmd
 import sys
-from turtle import update
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -11,7 +11,6 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -39,7 +38,6 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
-
         Usage: <class name>.<command>([<id> [<*args> or <**kwargs>]])
         (Brackets denote optional fields in usage example.)
         """
@@ -116,19 +114,25 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
+        arg_list = args.split(" ")
         """ Create an object of any class"""
-        args_list = re.split(' |=', args)
         if not args:
             print("** class name missing **")
             return
-        elif args_list[0] not in HBNBCommand.classes:
+        elif arg_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args_list[0]]()
+        new_inst = HBNBCommand.classes[arg_list[0]]()
         storage.save()
-        HBNBCommand.do_update(
-            self, f"{args_list[0]} {new_instance.id} {args_list[1]} {args_list[2]}")
-        print(new_instance.id)
+        print(new_inst.id)
+
+        for i in range(1, len(arg_list)):
+            if "=" not in arg_list[i]:
+                continue
+            k, v = tuple(arg_list[i].split("="))
+            if v[0] == '"':
+                v = v.replace("_", " ")
+            HBNBCommand.do_update(self, f"{arg_list[0]} {new_inst.id} {k} {v}")
         storage.save()
 
     def help_create(self):
