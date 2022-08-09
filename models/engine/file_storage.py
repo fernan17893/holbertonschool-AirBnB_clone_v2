@@ -56,6 +56,7 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
+        """Deletes an object inside File Storage"""
         try:
             del FileStorage.__objects[f"{type(obj).__name__}.{obj.id}"]
         except (KeyError, AttributeError):
