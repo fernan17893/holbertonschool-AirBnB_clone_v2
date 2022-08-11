@@ -39,7 +39,7 @@ class DBStorage:
         """Returns dictionary"""
         table_dict = {}
         classes = {'State': State, 'City': City, 'User': User,
-                   'Place': Place, 'Review': Review, 'Amenity': Amenity}
+                   'Place': Place}
         if cls is None:
             for c in classes:
                 result = self.__session.query(classes[c]).all()
