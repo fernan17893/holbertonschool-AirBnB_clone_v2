@@ -41,10 +41,12 @@ class DBStorage:
         :return: A dictionary of all the objects in the database.
         """
         query_dict = {}
+        classes = {'State': State, 'City': City}
         if cls is None:
-            result = self.__session.query(State).all()
+            for c in classes:
+                result = self.__session.query(classes[c]).all()
         else:
-            result = self.__session.query(cls).all
+            result = self.__session.query(classes[cls]).all
         for row in result:
             query_dict.update({f"{row.__class__}.{row.id}": {row}})
         return query_dict

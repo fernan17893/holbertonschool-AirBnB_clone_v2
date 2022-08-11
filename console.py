@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Console Module """
-from ast import arg
 import cmd
 import sys
+import os
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -114,25 +114,28 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        arg_list = args.split(" ")
         """ Create an object of any class"""
+        arg_list = args.split(" ")
         if not args:
             print("** class name missing **")
             return
         elif arg_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_inst = HBNBCommand.classes[arg_list[0]]()
-        storage.save()
+        kwargs_dict = {}
+        if len(arg_list) > 0:
+            for i in range(1, len(arg_list)):
+                if "=" not in arg_list[i]:
+                    continue
+                k, v = tuple(arg_list[i].split("="))
+                if v[0] == '"':
+                    v = v.replace("_", " ")
+                    v = v[1:-1]
+                kwargs_dict[k] = v
+        new_inst = HBNBCommand.classes[arg_list[0]](**kwargs_dict)
+        new_inst.save()
         print(new_inst.id)
 
-        for i in range(1, len(arg_list)):
-            if "=" not in arg_list[i]:
-                continue
-            k, v = tuple(arg_list[i].split("="))
-            if v[0] == '"':
-                v = v.replace("_", " ")
-            HBNBCommand.do_update(self, f"{arg_list[0]} {new_inst.id} {k} {v}")
         storage.save()
 
     def help_create(self):
@@ -195,8 +198,9 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
 
+        target = storage.all()[key]
         try:
-            del(storage.all()[key])
+            storage.delete(target)
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -215,11 +219,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all(args).items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)
