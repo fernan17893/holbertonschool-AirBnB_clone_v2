@@ -10,7 +10,8 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
 class User(BaseModel, Base):
 
-        email = ''
-        password = ''
-        first_name = ''
-        last_name = ''
+    __tablename__ = "users"
+    email = Column(String(128), nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(128), nullable=False)
+    last_name = Column(String(128), nullable=False)
