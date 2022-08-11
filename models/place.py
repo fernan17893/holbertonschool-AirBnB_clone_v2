@@ -4,6 +4,7 @@ from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+import os
 
 
 class Place(BaseModel, Base):
@@ -20,3 +21,17 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     amenity_ids = []
+
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        reviews = relationship("Review", backref='place', cascade="delete")
+    else:
+        @property
+        def reviews_att(self):
+            """Defines review attribute for FileStorage"""
+            from models import storage
+            cities_dict = storage.all('Review')
+            cities_list = []
+            for key, value in cities_dict.items():
+                if value.state_id == self.id:
+                    cities_list.append(value)
+            return cities_list
