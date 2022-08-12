@@ -37,7 +37,7 @@ class Place(BaseModel, Base):
                              viewonly=False)
     if os.getenv("HBNB_TYPE_STORAGE") != "db":
         @property
-        def reviews_att(self):
+        def amenities(self):
             """Defines review attribute for FileStorage"""
             from models import storage
             reviews_dict = storage.all('Review')
