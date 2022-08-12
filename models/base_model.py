@@ -55,7 +55,8 @@ class BaseModel:
 
     def delete(self):
         """
-        The delete function deletes the current instance from the storage and saves the changes
+        The delete function deletes the current instance from the storage
+         and saves the changes
         """
         models.storage.delete(self)
         models.storage.save()
