@@ -4,6 +4,7 @@ import os.path
 from datetime import datetime
 from fabric.api import local
 
+
 def do_pack():
     """ Create tgz archive """
     dt = datetime.utcnow()
