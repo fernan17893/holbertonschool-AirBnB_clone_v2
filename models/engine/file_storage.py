@@ -61,3 +61,7 @@ class FileStorage:
             del FileStorage.__objects[f"{type(obj).__name__}.{obj.id}"]
         except (KeyError, AttributeError):
             pass
+
+    def close(self):
+        """desieralize JSON file to objects"""
+        self.reload()
