@@ -56,11 +56,13 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Deletes an object inside File Storage"""
-        try:
-            del FileStorage.__objects[f"{type(obj).__name__}.{obj.id}"]
-        except (KeyError, AttributeError):
-            pass
+        """Deletes an object passed to it """
+        if obj is not None:
+            for k, v in FileStorage.__objects.items():
+                    if v is obj:
+                        d == k
+            FileStorage.__objects.pop(d)
+            self.save()
 
     def close(self):
         """desieralize JSON file to objects"""
